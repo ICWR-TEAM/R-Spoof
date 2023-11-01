@@ -4,7 +4,7 @@
 ###
 R-Spoof ( ARP Spoofer )
 ###
-![screenshot](https://raw.githubusercontent.com/ICWR-TEAM/R-Spoof/main/screenshot.png)
+![screenshot](https://raw.githubusercontent.com/ICWR-TEAM/R-Spoof/main/ss.png)
 ###
 ```bash
 python R-Spoof.py -x [target/list-target] -g [gateway] -d [delay] -t [thread]
