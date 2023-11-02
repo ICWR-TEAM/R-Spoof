@@ -60,25 +60,22 @@ class ARPSpoof:
             time.sleep(self.args.delay)
 
     def restore(self, target, gateway):
-        
-        while (True):
-        
-            try:
 
-                packet = scapy.ARP(op = 2, pdst = gateway, hwdst = self.mac(gateway), psrc = target, hwsrc = self.mac(target))
-                scapy.send(packet, verbose = False)
-                
-                packet = scapy.ARP(op = 2, pdst = target, hwdst = self.mac(target), psrc = gateway, hwsrc = self.mac(gateway))
-                scapy.send(packet, verbose = False)
-                
-            except Exception as E:
-                
-                print("[-] [Error: {}]".format(E))
-                self.restore(target, gateway)
+        try:
+
+            packet = scapy.ARP(op = 2, pdst = gateway, hwdst = self.mac(gateway), psrc = target, hwsrc = self.mac(target))
+            scapy.send(packet, verbose = False)
+            
+            packet = scapy.ARP(op = 2, pdst = target, hwdst = self.mac(target), psrc = gateway, hwsrc = self.mac(gateway))
+            scapy.send(packet, verbose = False)
+            
+        except Exception as E:
+            
+            print("[-] [Error: {}]".format(E))
+            self.restore(target, gateway)
         
     def proc(self):
-        
-        
+
         parser = argparse.ArgumentParser()
         parser.add_argument("-x", "--target", required = True, help = "Terget IP ( Multiple Target Using \",\" Example : 192.168.1.1,192.168.1.2 )", type = str)
         parser.add_argument("-g", "--gateway", required = True, help = "Gateway IP", type = str)
